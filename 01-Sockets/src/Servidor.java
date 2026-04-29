@@ -17,6 +17,8 @@ public class Servidor {
     // Obre la connexió del servidor
     try {
       srvSocket = new ServerSocket(PORT);
+      System.out.println("Servidor en marxa a " + HOST + ":" + PORT);
+      System.out.println("Esperant connexions a " + HOST + ":" + PORT);
     } catch (IOException e) {
       System.out.println("Error al obrir la connexió del servidor: " + e.getMessage());
     }
@@ -24,6 +26,7 @@ public class Servidor {
     //accepta la connexió del client
     try {
       clientSocket = srvSocket.accept();
+      System.out.println("Client connectat: " + clientSocket.getInetAddress());
     } catch (IOException e) {
       System.out.println("Error al acceptar la connexió del client: " + e.getMessage());
     }
@@ -31,8 +34,14 @@ public class Servidor {
 
   // Métode on es rebren les dades del client
   public void repDades() throws IOException{
-    BufferedReader text = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));   // Llegeix les dades del clientsocket
-    text.close();                                                                                     // tanquem el buffereddreader
+    BufferedReader text = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // Llegeix les dades del clientsocket
+    
+    String linia;
+    while((linia = text.readLine()) != null) { //llegeix fins que el client tanca
+      System.out.println("Rebut: " + linia);
+    }
+
+    text.close();                                                                                   // tanquem el buffereddreader
   }
 
   // Mètode per tancar la connexió del client
@@ -46,6 +55,7 @@ public class Servidor {
     // Tanquem la connexió del servidor
     try {
       srvSocket.close();
+      System.out.println("Servidor tancat.");
     } catch (IOException e) {
       System.out.println("Error al tancar la connexió del servidor: " + e.getMessage());
     }
